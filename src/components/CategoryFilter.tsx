@@ -1,22 +1,24 @@
-type Props = {
-  onSelect: (category: string) => void;
-};
+import { categories } from "../types/data.t";
+import { CategoryFilterProps } from "../types/movie";
 
-const categories = [
-  { label: "Now Playing", value: "now_playing" },
-  { label: "Popular", value: "popular" },
-  { label: "Top Rated", value: "top_rated" },
-  { label: "Upcoming", value: "upcoming" },
-];
-
-export default function CategoryFilter({ onSelect }: Props) {
+export default function CategoryFilter({
+  onSelect,
+  category,
+}: CategoryFilterProps) {
   return (
     <div className="flex flex-wrap gap-2 mb-4">
       {categories.map((cat) => (
         <button
           key={cat.value}
-          onClick={() => onSelect(cat.value)}
-          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          onClick={(e) => {
+            e.preventDefault();
+            onSelect(cat.value);
+          }}
+          className={`px-3 py-1 rounded transition ${
+            category === cat.value
+              ? "bg-blue-600 text-white hover:bg-blue-700"
+              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+          }`}
         >
           {cat.label}
         </button>

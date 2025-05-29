@@ -36,3 +36,13 @@ export interface Crew {
   department: string;
   profile_path: string | null;
 }
+
+export type CategoryFilterProps = {
+  onSelect: (category: string) => void;
+  category: string;
+};
+export type MovieListProps = {
+  loading: boolean;
+  page: number;
+  setPage: (page: number) => void;
+};

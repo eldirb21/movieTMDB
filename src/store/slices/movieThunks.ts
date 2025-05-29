@@ -1,57 +1,51 @@
-import { fetchMovies } from "../../services/api";
-import { AppDispatch } from "../store";
 import {
-  setNowPlaying,
-  setPopular,
-  setTopRated,
-  setUpComing,
-  setLoading,
-} from "./moviesSlice";
+  fetchMovieDetail,
+  fetchMovies,
+  searchMovies,
+} from "../../services/api";
+import { AppDispatch } from "../store";
+import { setLoading, setMovieDetail, setMovies } from "./moviesSlice";
 
-export const fetchNowPlayingMovies = () => async (dispatch: AppDispatch) => {
-  dispatch(setLoading(true));
-  try {
-    const res = await fetchMovies("now_playing");
-    dispatch(setNowPlaying(res.data.results));
-  } catch (error) {
-    console.error("fetchNowPlayingMovies error:", error);
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
+export const fetchMoviesList =
+  (category: string = "now_playing", page: number = 1) =>
+  async (dispatch: AppDispatch) => {
+    dispatch(setLoading(true));
+    try {
+      const res = await fetchMovies(category, page);
 
-export const fetchPopularMovies = () => async (dispatch: AppDispatch) => {
-  dispatch(setLoading(true));
-  try {
-    const res = await fetchMovies("popular");
-    dispatch(setPopular(res.data.results));
-  } catch (error) {
-    console.error("fetchPopularMovies error:", error);
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
+      dispatch(setMovies(res.data.results));
+    } catch (error) {
+      console.error("fetchMoviesList error:", error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
 
-export const fetchTopRatedMovies = () => async (dispatch: AppDispatch) => {
-  dispatch(setLoading(true));
-  try {
-    const res = await fetchMovies("top_rated");
-    dispatch(setTopRated(res.data.results));
-  } catch (error) {
-    console.error("fetchTopRatedMovies error:", error);
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
+export const fetchDetailMovies =
+  (id: string) => async (dispatch: AppDispatch) => {
+    dispatch(setLoading(true));
+    try {
+      const res = await fetchMovieDetail(id);
 
-export const fetchUpComingMovies = () => async (dispatch: AppDispatch) => {
-  dispatch(setLoading(true));
-  try {
-    const res = await fetchMovies("upcoming");
-    dispatch(setUpComing(res.data.results));
-  } catch (error) {
-    console.error("fetchUpComingMovies error:", error);
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
+      dispatch(setMovieDetail(res.data));
+    } catch (error) {
+      console.error("fetchDetailMovies error:", error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+export const fetchSearchMovies =
+  (query: string, page = 1) =>
+  async (dispatch: AppDispatch) => {
+    dispatch(setLoading(true));
+    try {
+      const res = await searchMovies(query, page);
+
+      dispatch(setMovies(res.data.results));
+    } catch (error) {
+      console.error("fetchSearchMovies error:", error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };

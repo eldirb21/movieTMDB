@@ -1,29 +1,25 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Movie, MovieDetail } from "../../types/movie";
 
-export interface Movie {
-  id: number;
-  title: string;
-  // ...other fields
+export interface FILTER {
+  category: string;
+  page: number;
 }
-
 export interface MoviesState {
-  movies: {
-    list: Movie[];
-    nowPlaying: Movie[];
-    popular: Movie[];
-    topRated: Movie[];
-    upComing: Movie[];
-  };
+  movies: Movie[];
+  moviesDetail: MovieDetail | null;
+  searchQuery: string;
+  filter: FILTER;
   loading: boolean;
 }
 
 const initialState: MoviesState = {
-  movies: {
-    list: [],
-    nowPlaying: [],
-    popular: [],
-    topRated: [],
-    upComing: [],
+  movies: [],
+  moviesDetail: null,
+  searchQuery: "",
+  filter: {
+    category: "",
+    page: 1,
   },
   loading: false,
 };
@@ -33,33 +29,34 @@ const moviesSlice = createSlice({
   initialState,
   reducers: {
     setMovies(state, action: PayloadAction<Movie[]>) {
-      state.movies.list = action.payload;
+      state.movies = [...state.movies, ...action.payload];
     },
-    setNowPlaying(state, action: PayloadAction<Movie[]>) {
-      state.movies.nowPlaying = action.payload;
+    setMovieDetail(state, action: PayloadAction<MovieDetail>) {
+      state.moviesDetail = action.payload;
     },
-    setPopular(state, action: PayloadAction<Movie[]>) {
-      state.movies.popular = action.payload;
-    },
-    setTopRated(state, action: PayloadAction<Movie[]>) {
-      state.movies.topRated = action.payload;
-    },
-    setUpComing(state, action: PayloadAction<Movie[]>) {
-      state.movies.upComing = action.payload;
+    setSearched(state, action: PayloadAction<string>) {
+      state.searchQuery = action.payload;
     },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
+    },
+    setFilter(state, action: PayloadAction<FILTER>) {
+      state.filter.category = action.payload.category;
+      state.filter.page = action.payload.page;
+    },
+    clearMovies(state) {
+      state.movies = [];
     },
   },
 });
 
 export const {
   setMovies,
-  setNowPlaying,
-  setPopular,
-  setTopRated,
-  setUpComing,
   setLoading,
+  setMovieDetail,
+  setSearched,
+  clearMovies,
+  setFilter,
 } = moviesSlice.actions;
 
 export default moviesSlice.reducer;
