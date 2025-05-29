@@ -1,39 +1,49 @@
-import MovieList from "../components/MovieList";
-import { useEffect, useState } from "react";
-import SearchBar from "../components/SearchBar";
+import { useEffect } from "react";
 import CategoryFilter from "../components/CategoryFilter";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import {
-  fetchNowPlayingMovies,
-  fetchPopularMovies,
-  fetchTopRatedMovies,
-  fetchUpComingMovies,
-} from "../store/slices/movieThunks";
+
+import { fetchMoviesList } from "../store/slices/movieThunks";
+import { clearMovies, setFilter } from "../store/slices/moviesSlice";
+import MovieList from "../components/MovieList";
 import { RootState } from "../store/store";
+import SearchBar from "../components/SearchBar";
 
 export default function Home() {
   const dispatch = useAppDispatch();
-  const [category, setCategory] = useState("popular");
-  const { movies, loading } = useAppSelector(
-    (state: RootState) => state.movieList
-  );
-
-  const { popular, list, nowPlaying, topRated, upComing } = movies;
+  const {
+    loading,
+    searchQuery,
+    filter: { category, page },
+  } = useAppSelector((state: RootState) => state.movieList);
 
   useEffect(() => {
-    dispatch(fetchPopularMovies());
-    dispatch(fetchNowPlayingMovies());
-    dispatch(fetchTopRatedMovies());
-    dispatch(fetchUpComingMovies());
-  }, [dispatch]);
+    if (!category) {
+      dispatch(setFilter({ category: "now_playing", page: 1 }));
+    }
+  }, []);
 
-  if (loading) return <p>Loading...</p>;
+  useEffect(() => {
+    if (category && !searchQuery) {
+      dispatch(clearMovies());
+      fetchMovies();
+    }
+  }, [page, category]);
+
+  const fetchMovies = () => dispatch(fetchMoviesList(category, page));
+
+  const setCategories = (key: string) => {
+    dispatch(clearMovies());
+    dispatch(setFilter({ category: key, page: 1 }));
+  };
+
+  const setPage = (page: number) =>
+    dispatch(setFilter({ category: category, page }));
 
   return (
     <div className="min-h-full p-8">
       <SearchBar />
-      <CategoryFilter onSelect={setCategory} />
-      <MovieList category={category} />
+      <CategoryFilter onSelect={setCategories} category={category} />
+      <MovieList setPage={setPage} page={page} loading={loading} />
     </div>
   );
 }

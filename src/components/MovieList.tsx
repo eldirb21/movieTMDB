@@ -1,32 +1,42 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { Movie } from "../types/movie";
-import { fetchMovies } from "../services/api";
+import React, { useRef, useEffect, useCallback } from "react";
 import MovieCard from "./MovieCard";
+import { RootState } from "../store/store";
+import { useAppSelector } from "../hooks/hooks";
 
-export default function MovieList({ category }: { category: string }) {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [page, setPage] = useState(1);
-  const loader = useRef(null);
+interface MovieListProps {
+  page: number;
+  setPage: (page: number) => void;
+  loading: boolean;
+}
 
-  useEffect(() => {
-    fetchMovies(category, page).then((res) => {
-      setMovies((prev) => [...prev, ...res.data.results]);
-    });
-  }, [category, page]);
+function MovieList({ page, setPage, loading }: MovieListProps) {
+  const loader = useRef<HTMLDivElement | null>(null);
+  const { movies } = useAppSelector((state: RootState) => state.movieList);
 
   const loadMore = useCallback(() => {
-    setPage((prev) => prev + 1);
-  }, []);
+    if (!loading) {
+      setPage(page + 1);
+    }
+  }, [loading, page, setPage]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) loadMore();
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      {
+        rootMargin: "100px",
+        threshold: 0.1,
+      }
+    );
 
-    if (loader.current) observer.observe(loader.current);
+    const currentLoader = loader.current;
+    if (currentLoader) observer.observe(currentLoader);
 
     return () => {
-      if (loader.current) observer.disconnect();
+      if (currentLoader) observer.unobserve(currentLoader);
     };
   }, [loadMore]);
 
@@ -37,7 +47,11 @@ export default function MovieList({ category }: { category: string }) {
           <MovieCard key={`${movie.id}-${index}`} movie={movie} />
         ))}
       </div>
-      <div ref={loader} className="h-10" />
+
+      <div ref={loader} style={{ height: 1 }} />
+      {loading && <p className="text-center mt-4">Loading more...</p>}
     </>
   );
 }
+
+export default React.memo(MovieList);
