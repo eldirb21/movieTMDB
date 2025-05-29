@@ -14,11 +14,11 @@ import { RootState } from "../store/store";
 export default function Home() {
   const dispatch = useAppDispatch();
   const [category, setCategory] = useState("popular");
-  const { movies, loading } = useAppSelector(
+  const {   loading } = useAppSelector(
     (state: RootState) => state.movieList
   );
 
-  const { popular, list, nowPlaying, topRated, upComing } = movies;
+  // const { popular, list, nowPlaying, topRated, upComing } = movies;
 
   useEffect(() => {
     dispatch(fetchPopularMovies());
