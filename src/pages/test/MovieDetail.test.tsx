@@ -5,17 +5,12 @@ import * as hooks from "../../hooks/hooks";
 import * as movieThunks from "../../store/slices/movieThunks";
 import { Movie } from "../../types/movie";
 
-// Mock environment variable
-process.env.REACT_APP_URL_IMAGE = "https://image.tmdb.org/t/p/w500";
-
-// Mock react-router
 jest.mock("react-router", () => ({
   ...jest.requireActual("react-router"),
   useParams: jest.fn(),
   useNavigate: jest.fn(),
 }));
 
-// Mock fetchDetailMovies to return a thunk function
 jest.mock("../../store/slices/movieThunks", () => ({
   fetchDetailMovies: jest.fn((id: string) => (dispatch: any) => {
     dispatch({ type: "FETCH_DETAIL_MOVIES", payload: id });
@@ -57,7 +52,6 @@ describe("MovieDetail", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Mock hooks
     jest.spyOn(hooks, "useAppDispatch").mockReturnValue(mockDispatch);
     jest.spyOn(hooks, "useAppSelector").mockImplementation((selector) =>
       selector({
@@ -113,10 +107,8 @@ describe("MovieDetail", () => {
   it("dispatches fetchDetailMovies on mount with id", () => {
     render(<MovieDetail />);
 
-    // Thunk was dispatched
     expect(mockDispatch).toHaveBeenCalledWith(expect.any(Function));
 
-    // Thunk function was created with correct id
     expect(movieThunks.fetchDetailMovies).toHaveBeenCalledWith("123");
   });
 
@@ -124,16 +116,14 @@ describe("MovieDetail", () => {
     render(<MovieDetail />);
 
     expect(screen.getByText("Inception")).toBeInTheDocument();
-    //     const label = screen.getByText(/Release Date:/);
-    // expect(label).toHaveTextContent("Release Date: 2010-07-16");
-    // expect(screen.getByText(/Release Date:/)).toHaveTextContent("2010-07-16");
     expect(screen.getByText("2010-07-16")).toBeInTheDocument();
 
     expect(screen.getByText(/Director:/)).toBeInTheDocument();
     expect(screen.getByText(/Top Cast:/)).toBeInTheDocument();
     expect(screen.getByText("Overview")).toBeInTheDocument();
-   expect(screen.getByText("A thief who steals corporate secrets ...")).toBeInTheDocument();
-    
+    expect(
+      screen.getByText("A thief who steals corporate secrets ...")
+    ).toBeInTheDocument();
   });
 
   it("shows loading text when loading is true", () => {
