@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Movie } from "../types/movie";
 
 const URL_IMAGE = process.env.REACT_APP_URL_IMAGE;

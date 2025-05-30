@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Movie, MovieDetail } from "../../types/movie";
+import { Movie, MovieDetailData } from "../../types/movie";
 
 export interface FILTER {
   category: string;
@@ -7,7 +7,7 @@ export interface FILTER {
 }
 export interface MoviesState {
   movies: Movie[];
-  moviesDetail: MovieDetail | null;
+  moviesDetail: MovieDetailData | null;
   searchQuery: string;
   filter: FILTER;
   loading: boolean;
@@ -31,7 +31,7 @@ const moviesSlice = createSlice({
     setMovies(state, action: PayloadAction<Movie[]>) {
       state.movies = [...state.movies, ...action.payload];
     },
-    setMovieDetail(state, action: PayloadAction<MovieDetail>) {
+    setMovieDetail(state, action: PayloadAction<MovieDetailData>) {
       state.moviesDetail = action.payload;
     },
     setSearched(state, action: PayloadAction<string>) {
