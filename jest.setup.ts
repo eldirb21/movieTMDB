@@ -1,22 +1,23 @@
+import '@testing-library/jest-dom';
+
 import dotenv from "dotenv";
-import { TextDecoder, TextEncoder } from "util";
+import {
+  TextDecoder as NodeTextDecoder,
+  TextEncoder as NodeTextEncoder,
+} from "util";
 
 dotenv.config({ path: ".env.test" });
 
-Object.assign(global, { TextDecoder, TextEncoder });
+Object.assign(global, {
+  TextDecoder: NodeTextDecoder as unknown as typeof globalThis.TextDecoder,
+  TextEncoder: NodeTextEncoder as unknown as typeof globalThis.TextEncoder,
+});
 
-if (typeof global.TextEncoder === "undefined") {
-  global.TextEncoder = TextEncoder;
-}
-if (typeof window.TextEncoder === "undefined") {
-  window.TextEncoder = global.TextEncoder;
-}
-
-if (typeof global.TextDecoder === "undefined") {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  global.TextDecoder = TextDecoder;
-}
-if (typeof window.TextDecoder === "undefined") {
-  window.TextDecoder = global.TextDecoder;
+if (typeof window !== "undefined") {
+  if (typeof window.TextEncoder === "undefined") {
+    (window as any).TextEncoder = NodeTextEncoder;
+  }
+  if (typeof window.TextDecoder === "undefined") {
+    (window as any).TextDecoder = NodeTextDecoder;
+  }
 }

@@ -11,7 +11,7 @@ export interface Movie {
   original_title: string;
   popularity: number;
 }
-export interface MovieDetail extends Movie {
+export interface MovieDetailData extends Movie {
   runtime: number;
   genres: { id: number; name: string }[];
   status: string;

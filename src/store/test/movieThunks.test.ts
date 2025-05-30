@@ -1,8 +1,11 @@
 import { store } from "../store";
 import * as api from "../../services/api";
-import { fetchDetailMovies, fetchMoviesList, fetchSearchMovies } from "../slices/movieThunks";
-import { AxiosHeaders } from "axios";
-import { Movie, MovieDetail } from "../../types/movie";
+import {
+  fetchDetailMovies,
+  fetchMoviesList,
+  fetchSearchMovies,
+} from "../slices/movieThunks";
+import { Movie, MovieDetailData } from "../../types/movie";
 
 describe("moviesThunk actions", () => {
   beforeEach(() => {
@@ -21,7 +24,7 @@ describe("moviesThunk actions", () => {
     popularity: 10,
   };
 
-  const mockMovieDetail: MovieDetail = {
+  const mockMovieDetail: MovieDetailData = {
     ...mockMovie,
     runtime: 120,
     genres: [
@@ -60,7 +63,7 @@ describe("moviesThunk actions", () => {
       statusText: "OK",
       headers: {},
       config: {
-        headers: new AxiosHeaders(),
+        headers: {} as any,
       },
     });
 
@@ -80,7 +83,7 @@ describe("moviesThunk actions", () => {
       statusText: "OK",
       headers: {},
       config: {
-        headers: new AxiosHeaders(),
+        headers: {} as any,
       },
     });
 
@@ -102,7 +105,7 @@ describe("moviesThunk actions", () => {
       statusText: "OK",
       headers: {},
       config: {
-        headers: new AxiosHeaders(),
+        headers: {},
       },
     });
 
