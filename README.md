@@ -22,7 +22,7 @@ To run a project, you must run one of these commands.
 
 The output simply shows whether the test passed/failed, how many tests were run, and errors (if any).
 
-### `npm coverage` or `yarn coverage`
+### `npm run coverage` or `yarn coverage`
 
 This also runs the test but with the additional flag --coverage.
 
