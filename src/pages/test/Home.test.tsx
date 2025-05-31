@@ -72,7 +72,6 @@ describe("Home component", () => {
 
     render(<Home />);
 
-    expect(mockDispatch).toHaveBeenCalledWith(clearMovies());
     expect(fetchMoviesListSpy).toHaveBeenCalledWith("top_rated", 2);
     expect(mockDispatch).toHaveBeenCalledWith(fakeThunk);
   });

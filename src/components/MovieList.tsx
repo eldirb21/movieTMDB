@@ -11,7 +11,7 @@ interface MovieListProps {
 
 function MovieList({ page, setPage, loading }: MovieListProps) {
   const loader = useRef<HTMLDivElement | null>(null);
-  const { movies } = useAppSelector((state: RootState) => state.movieList);
+  const { movies, searchQuery } = useAppSelector((state: RootState) => state.movieList);
 
   const loadMore = useCallback(() => {
     if (!loading) {
@@ -39,6 +39,8 @@ function MovieList({ page, setPage, loading }: MovieListProps) {
       if (currentLoader) observer.unobserve(currentLoader);
     };
   }, [loadMore]);
+
+  if(searchQuery) return null
 
   return (
     <>

@@ -4,17 +4,26 @@ is Web Application Technical Test
 
 [MOVIES DEMO](https://movie-tmdb-tau-two.vercel.app)
 
-## Available Scripts
+## setup Project
 
-In the project directory, you can run:
+### `npm install` or `yarn install`
+
+Before running the project, make sure to install it first.
+
+## Running Project
 
 ### `npm start` or `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To run a project, you must run one of these commands.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Running Test
 
 ### `npm test` or `yarn test`
-  
+
+The output simply shows whether the test passed/failed, how many tests were run, and errors (if any).
+
+### `npm run coverage` or `yarn coverage`
+
+This also runs the test but with the additional flag --coverage.
+
+Coverage will calculate and display code coverage statistics, i.e. how many lines, functions, and blocks of code the test executes.

@@ -14,6 +14,7 @@ describe("moviesSlice reducer", () => {
 
   beforeEach(() => {
     initialState = {
+      hasMore: false,
       movies: [],
       moviesDetail: null,
       searchQuery: "",
