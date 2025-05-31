@@ -3,27 +3,37 @@ import MovieCard from "./MovieCard";
 import { clearMovies, setSearched } from "../store/slices/moviesSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { RootState } from "../store/store";
-import {
-  fetchMoviesList,
-  fetchSearchMovies,
-} from "../store/slices/movieThunks";
+import { fetchSearchMovies } from "../store/slices/movieThunks";
 
-export default function SearchBar() {
+interface SearchProps {
+  setPage: (page: number) => void;
+}
+
+export default function SearchBar({ setPage }: SearchProps) {
   const dispatch = useAppDispatch();
-  const {
-    searchQuery,
-    movies,
-    filter: { category, page },
-  } = useAppSelector((state: RootState) => state.movieList);
+  const { searchQuery, movies } = useAppSelector(
+    (state: RootState) => state.movieList
+  );
 
   const [showResults, setShowResults] = useState(false);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = () => {
     if (!searchQuery) return;
-    dispatch(clearMovies());
     dispatch(fetchSearchMovies(searchQuery));
     setShowResults(true);
+  };
+
+  const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    dispatch(setSearched(e.target.value));
+    dispatch(clearMovies());
+
+    if (!e.target.value) {
+      setPage(1);
+      setShowResults(false);
+    } else {
+      handleSearch();
+    }
   };
 
   return (
@@ -32,31 +42,14 @@ export default function SearchBar() {
         <h1 className="text-3xl font-bold font-serif bg-gradient-to-r from-green-600 via-blue-500 to-indigo-400 inline-block text-transparent bg-clip-text">
           MOVIES
         </h1>
-        <form
-          onSubmit={handleSearch}
-          className="flex gap-2 w-full md:w-1/4 mt-4 md:mt-0"
-        >
+        <form className="flex gap-2 w-full md:w-1/4 mt-4 md:mt-0">
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => {
-              e.preventDefault();
-              if (!e.target.value) {
-                dispatch(clearMovies());
-                setShowResults(false);
-                dispatch(fetchMoviesList(category, page));
-              }
-              dispatch(setSearched(e.target.value));
-            }}
+            onChange={onChangeSearch}
             placeholder="Search movies..."
             className="w-full p-2 border border-gray-300 hover:border-red-300 rounded"
           />
-          <button
-            type="submit"
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Search
-          </button>
         </form>
       </div>
       {showResults && (
@@ -68,7 +61,9 @@ export default function SearchBar() {
             {movies.length === 0 ? (
               <p className="text-gray-500">No movies found.</p>
             ) : (
-              movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+              movies.map((movie, index) => (
+                <MovieCard key={index} movie={movie} />
+              ))
             )}
           </div>
         </div>

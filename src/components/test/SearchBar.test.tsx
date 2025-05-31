@@ -2,8 +2,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import SearchBar from "../SearchBar";
-import { fetchSearchMovies } from "../../store/slices/movieThunks";
-import { clearMovies } from "../../store/slices/moviesSlice";
 
 jest.mock("../MovieCard", () => ({ movie }: any) => (
   <div data-testid="movie-card">{movie.title}</div>
@@ -39,7 +37,7 @@ describe("SearchBar", () => {
   const renderComponent = () =>
     render(
       <Provider store={store}>
-        <SearchBar />
+        <SearchBar setPage={jest.fn()} />
       </Provider>
     );
 
@@ -65,29 +63,6 @@ describe("SearchBar", () => {
     });
   });
 
-  it("dispatches fetchSearchMovies on form submit", () => {
-    store = mockStore({
-      movieList: {
-        searchQuery: "Matrix",
-        movies: [],
-        filter: { category: "popular", page: 1 },
-      },
-    });
-    store.dispatch = jest.fn();
-
-    render(
-      <Provider store={store}>
-        <SearchBar />
-      </Provider>
-    );
-
-    fireEvent.click(screen.getByRole("button", { name: /search/i }));
-
-    expect(store.dispatch).toHaveBeenCalledWith(clearMovies());
-
-    expect(store.dispatch).toHaveBeenCalledWith(fetchSearchMovies("Matrix"));
-  });
-
   it("shows 'No movies found' if movies is empty and showResults is true", () => {
     store = mockStore({
       movieList: {
@@ -101,16 +76,13 @@ describe("SearchBar", () => {
 
     render(
       <Provider store={store}>
-        <SearchBar />
+        <SearchBar setPage={jest.fn()} />
       </Provider>
     );
 
-    const input = screen.getByPlaceholderText(/search movies/i);
-    fireEvent.change(input, {
-      target: { value: "NothingHere" },
-    });
+    const input = screen.getByPlaceholderText("Search movies...");
 
-    fireEvent.click(screen.getByRole("button", { name: /search/i }));
+    fireEvent.change(input, { target: { value: "NotFoundMovie" } });
 
     expect(screen.getByText(/no movies found/i)).toBeInTheDocument();
   });

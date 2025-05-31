@@ -56,6 +56,7 @@ describe("MovieDetail", () => {
     jest.spyOn(hooks, "useAppSelector").mockImplementation((selector) =>
       selector({
         movieList: {
+          hasMore: false,
           movies: moviesMock,
           moviesDetail: {
             id: 1,
@@ -130,6 +131,7 @@ describe("MovieDetail", () => {
     jest.spyOn(hooks, "useAppSelector").mockImplementation((selector) =>
       selector({
         movieList: {
+          hasMore: false,
           movies: moviesMock,
           moviesDetail: null,
           searchQuery: "",

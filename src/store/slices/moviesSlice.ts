@@ -11,6 +11,7 @@ export interface MoviesState {
   searchQuery: string;
   filter: FILTER;
   loading: boolean;
+  hasMore: boolean;
 }
 
 const initialState: MoviesState = {
@@ -22,6 +23,7 @@ const initialState: MoviesState = {
     page: 1,
   },
   loading: false,
+  hasMore: false,
 };
 
 const moviesSlice = createSlice({
@@ -44,6 +46,9 @@ const moviesSlice = createSlice({
       state.filter.category = action.payload.category;
       state.filter.page = action.payload.page;
     },
+    setHasMore(state, action: PayloadAction<boolean>) {
+      state.hasMore = action.payload;
+    },
     clearMovies(state) {
       state.movies = [];
     },
@@ -57,6 +62,7 @@ export const {
   setSearched,
   clearMovies,
   setFilter,
+  setHasMore,
 } = moviesSlice.actions;
 
 export default moviesSlice.reducer;

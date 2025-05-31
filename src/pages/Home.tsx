@@ -24,7 +24,6 @@ export default function Home() {
 
   useEffect(() => {
     if (category && !searchQuery) {
-      dispatch(clearMovies());
       fetchMovies();
     }
   }, [page, category]);
@@ -41,8 +40,10 @@ export default function Home() {
 
   return (
     <div className="min-h-full p-8">
-      <SearchBar />
-      <CategoryFilter onSelect={setCategories} category={category} />
+      <SearchBar setPage={setPage} />
+      {!searchQuery && (
+        <CategoryFilter onSelect={setCategories} category={category} />
+      )}
       <MovieList setPage={setPage} page={page} loading={loading} />
     </div>
   );

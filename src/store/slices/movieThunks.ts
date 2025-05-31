@@ -4,7 +4,7 @@ import {
   searchMovies,
 } from "../../services/api";
 import { AppDispatch } from "../store";
-import { setLoading, setMovieDetail, setMovies } from "./moviesSlice";
+import { setHasMore, setLoading, setMovieDetail, setMovies } from "./moviesSlice";
 
 export const fetchMoviesList =
   (category: string = "now_playing", page: number = 1) =>
@@ -14,6 +14,7 @@ export const fetchMoviesList =
       const res = await fetchMovies(category, page);
 
       dispatch(setMovies(res.data.results));
+      dispatch(setHasMore(res.data.results?.length > 0));
     } catch (error) {
       console.error("fetchMoviesList error:", error);
     } finally {
